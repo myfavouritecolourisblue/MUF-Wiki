@@ -1,0 +1,87 @@
+1. Einleitung
+Wir von Musik unter Freunden versuchen so wenig Tracking, Analyse, Cookies oder sonstige Möglichkeiten zur Verfolgung eures Benutzerverhaltens in unsere App einzubauen. Einige Daten müssen wir jedoch sammeln bzw. an unsere Server übertragen, damit die App ihre Grundfunktionen erfüllen kann.
+
+Oftmals sind Datenschutzerklärungen recht langweilig zu lesen und vor allem verklausuliert geschrieben, weshalb wir uns hier kurz und knapp halten wollen ohne die wichtigsten Details auszulassen. Dabei möchten wir euch genau aufzeigen, an welchen Punkten die Informationen gesammelt werden.
+
+2. Verbindungsdetails
+Wir verarbeiten in automatischer Manier, beginnend mit dem ersten Start der App, verbindungsbezogene Informationen von euch. Die erste davon ist die IP-Adresse.
+
+Unter einer IP-Adresse können sich die meisten Personen mittlerweile schemenhaft etwas vorstellen, und auch wenn nicht - gehört habt ihr den Begriff bestimmt schon einmal.
+Eine IP-Adresse ist so etwas wie eure digitale Postadresse, nur dass sich diese in mehr oder weniger regelmäßigen Abständen ändert, ganz ohne dass ihr es merkt.
+
+Wenn ihr die App öffnet verbindet sich diese mit unseren Servern um all die neuesten Nachrichten, Events und sonstigen Updates herunterzuladen und anzeigen zu können. Damit der Server auch weiß wohin er diese Updates, die unsere App von eurem Smartphone angefordert hat, schicken sollen, übermittelt die App beim Verbindungsaufbau mit dem Server auch die Postadresse, d.h. die IP-Adresse eures Smartphones. Während diese Verbindung besteht sind wir also im Besitz eurer IP-Adresse, und auch wenn wir diese IP-Adresse keiner bestimmten Person zuordnen können, da wir keine sonstigen Daten erheben, müssen wir euch über diesen Umstand informieren, da die IP-Adresse laut dem Urteil des europäischen Gerichtshofs vom 19.10.2016 (C-582/14, für alle Interessierten) zu den personenbezogenen Daten gehört.
+
+Eure IP-Adresse taucht außerdem mit jedem Verbindungsversuch in den Logs unseres Servers auf, und auch wenn wir versuchen die Logs regelmäßig zu löschen, auch um Speicherplatz zu sparen, sind die IP-Adressen für ca. eine Stunde in den Logs enthalten. Dies dient vornehmlich der einfacheren Nachvollziehbarkeit und Behebung von Fehlern in unserer App, wobei die Verbindungsversuche ein Teil des Gesamtbildes darstellen in welchem wir nach den Fehlern suchen.
+
+Mit jedem Verbindungsversuch werden außerdem die aufgerufene URL inkl. eventuellem Dateinamen (z.B. der Bilder), sowie das Datum und die Uhrzeit des Verbindungsversuchs mit in die Logdatei geschrieben.
+
+Zuguterletzt verbindet sich die App, beginnend mit dem ersten Start der App, auch mit den Server von Google, spezifisch mit denen von Google Firebase. Weshalb diese Verbindung zustande tritt erläutern wir im nächsten Abschnitt.
+
+
+
+3. Device Tokens
+Eine weitere Information die wir zusammen mit Google erheben sind sogenannte Device Tokens.
+
+Device Tokens - darunter können vermutlich nur die wenigsten etwas vorstellen, deshalb soll an dieser Stelle eine kurze Erklärung dazu folgen:
+
+Device Tokens sind alphanumerische Zeichenketten, die ungefähr so aussehen:
+15bu5j3fiHdQGlurHkXmru:MsbwOz4USuVKjEwisIqAHdYnXrszQCkrSKxhcSyFFIewM2HAKr1cGXjS4FQrpQAVCeS84oGSmdUjrXvO5NVuoiL4ECLS9YMTiKz6D9HwopC3pm_gT72q2KlipWLvAcWnF4GFJVawqf4h
+
+Nicht gerade einprägsam, dafür aber ganz schön einzigartig, denn: Beim ersten Start der App generiert diese einen zufälligen Token, welchen sie auf eurem Smartphone abspeichert. Und umso länger die Zeichenkette ist, desto geringer ist die Chance, dass zwei Smartphones denselben Token generieren.
+
+Und wofür nun der ganze Aufwand? Und was hat Google damit zutun?
+Google, genauer gesagt Google Firebase, ist unser bevorzugtes Werkzeug für den Versand von Push Notifications. Wenn wir euch beispielsweise über ein bevorstehendes Event informieren wollen und wir glauben, dass diese Information auf jeden Fall den begrenzten Platz in eurem Notification Center zur sofortigen Anzeige wert ist, senden wir eine Push Notification mit Hilfe von Google Firebase an euch.
+Google Firebase wendet sich mit dieser Notification an die Apple Push Notification Server, welche widerum euren Smartphones die Push Notification zusenden. Und woher wissen wir, Google oder Apple, an welche Smartphone sie sich wenden sollen? Ganz einfach, mit Hilfe des Device Tokens.
+Beim ersten Start der App generiert dein Smartphone nicht nur den Device Token, es übermittelt diesen auch an Google Firebase. Google Firebase sammelt diese Tokens, und sobald wir eine Push Notification an euch senden wollen wendet sich Google Firebase mit all den gesammelten Device Tokens an die Apple Push Notification Server. Diese widerum können anhand des Device Tokens eure Smartphones eindeutig identifizieren und gezielt Push Notifications an euch senden, sodass unsere Benachrichtigung mit einem Umweg über Google und Apple zeitnah bei euch landet.
+
+Und genau da liegt der Hase vergraben: Wir benötigen bzw. Google benötigt euren Device Token, damit Push Notification bei euch ankommen. Gleichzeitig liegen die Tokens, eure IP-Adressen und andere Informationen damit natürlich auch auf den Servern bei Google, und wie genau Google diese Daten intern behandelt bzw. welche Daten dort erhoben werden beschreiben sie in ihrer eigenen Datenschutzerklärung (den Link findet ihr am Ende der Seite). Wir würden gerne auf den Service von Google Firebase verzichten, als kleiner Verein mit nur geringen Kapazitäten im Bereich Programmierung war jede andere von uns im Vorhinein getestete Lösung, vor allem die auf eigenen Servern betriebenen, jedoch zu aufwendig gewesen. Google Firebase stellte die einfachste (und nebenbei auch kostengünstigste) zu implementierende Lösung dar.
+
+Die Device Tokens werden indefinitiv auf den Google Servern gespeichert. Da auch Neuinstallationen oder der Reset von App-Daten in den Smartphone Einstellungen die erneute Generierung eines neues Device Tokens bewirken (welcher den alten damit ablöst) und damit in der Folge eure alten Tokens inaktiv werden als auch die Deinstallation der App einen Device Token invalidiert versuchen wir regelmäßig solche inaktiven Tokens aufzuräumen. Dabei können wir niemals exakt garantieren, dass eure alten Tokens auch schon gelöscht wurden, da wir den Token nicht mit euren Namen, Adressen oder sonstigen Daten in Beziehung bringen und somit keine Aussagen treffen können welcher Device Token zu welcher Person gehört. Außerdem wissen wir nicht, ob ihr die App mal neu installiert oder die Appdaten zurückgesetzt habt. Definitiv werden aber alle Tokens unsererseits gelöscht wenn wir aufhören Google Firebase als Push Notification Werkzeug zu nutzen.
+
+Übrigens: Beim ersten Start könnt ihr euch entscheiden ob ihr Push Notifications erhalten wollt. Lehnt ihr ab wird kein Device Token erstellt. Solltet ihr die Push Notifications im Nachhinein über die Smartphone Einstellungen doch noch einschalten wird erst zu diesem Zeitpunkt ein Device Token generiert und bei Google Firebase registriert.
+
+
+
+4. Sonderfall Beitrittserklärung
+Damit wären die Hauptpunkte behandelt. Wer bis zu diesem Punkt gelesen hat: Chapeau! Ihr wisst nun alles über die Informationen, die wir vollautomatisch von euch verarbeiten. Nicht automatisch, sondern ganz altmodisch von Hand verarbeiten wir die Daten, die ihr für die Vereins-Beitrittserklärung angebt, ganz egal ob ihr uns diese via WhatsApp, E-Mail oder Post zukommen lasst. Benötigt werden diese Informationen natürlich für das SEPA-Lastschriftmandat, das ihr uns mit der Beitrittserklärung erteilt. Diese besonders sensiblen Informationen verarbeiten wir auch nicht in der App oder auf unseren Servern weiter, die Informationen aus dem ausfüllbaren Formular werden lediglich genutzt um die versandbereite PDF zu generieren.
+Die Informationen zu eurer Person behalten wir nur für den Zeitraum eurer Vereinsmitgliedschaft, d.h. wir löschen diese sofrt im Falle eines Vereinsaustritts.
+
+
+
+5. Eure Rechte
+Alle Daten werden auf Grundlage der Datenschutz-Grundverordnung, kurz DSGVO, verarbeitet. Diese definiert u.a. auch die folgenden Rechte für die betroffene Person, sprich jedem einzelnen von euch:
+
+- Recht auf Information / Informationspflicht (Art. 12/13/14 DSGVO)
+- Auskunftsrecht (Art. 15 DSGVO)
+- Recht auf Berichtigung (Art. 16 DSGVO)
+- Recht auf Löschung / Vergessenwerden (Art. 17 DSGVO)
+- Recht auf Einschränkung der Verarbeitung (Art. 18 DSGVO)
+- Recht auf Datenübertragbarkeit  (Art. 20 DSGVO)
+- Widerspruchsrecht (Art. 21 DSGVO)
+
+Den Link zum tatsächlichen Gesetzestext findet ihr am Ende der Datenschutzerklärung.
+
+All diese Rechte könnt ihr für euch durch eine formlose Anfrage an uns durchsetzen. Die Kontaktdaten des Verantwortlichen im Sinne der DSGVO lauten wie folgt:
+
+Musik unter Freunden e.V.
+Milsper Straße 199
+58256 Ennepetal
+E-Mail: info@musik-unter-freunden.de
+
+
+
+6. Schlussworte
+Und damit wären wir auch schon am Ende der Datenschutzerklärung. Wir hoffen euch unsere Beweggründe für die Verarbeitung eurer Daten möglichst anschaulich überbracht zu haben. Solltet ihr dennoch Fragen haben könnt ihr diese natürlich an die weiter oben genannte E-Mail o. Postadresse sowie an die im FAQ genannten Kontaktmöglichkeiten senden. Wir freuen uns über eure Anfragen und bearbeiten diese gerne.
+
+Wie versprochen folgen hier noch die Links zur Datenschutzverordnung von Google (Firebase) sowie der DSGVO:
+
+- Google (Firebase)
+https://firebase.google.com/terms/data-processing-terms
+https://developers.google.com/terms/
+https://cloud.google.com/terms/data-processing-addendum?_ga=2.20391024.-918006594.1689504293
+https://cloud.google.com/terms?hl=de
+
+- DSGVO
+https://eur-lex.europa.eu/legal-content/DE/TXT/PDF/?uri=CELEX:32016R0679&from=DE
+
+Stand der Datenschutzerklärung: 29.07.2023
